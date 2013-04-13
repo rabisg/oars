@@ -5,7 +5,7 @@ class Authenticated extends MY_Controller
    {
       parent::__construct();
       //var_dump($this->session->userdata('username'));
-      if (!$this->session->userdata('username'))
+      if (!$this->session->userdata('email'))
       	redirect('');
    }
 }

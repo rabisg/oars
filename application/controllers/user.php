@@ -9,48 +9,57 @@ class User extends Authenticated {
 	}
 	public function profile()
 	{
+		$header = array();
+		if (isset($_POST['name'])) {
+			$this->db->where('roll_no', $this->session->userdata('rollno'));
+			$this->db->update('Student', $_POST);
+			$header['alert'] = array('type' => 'success', 'text' => 'Your details have been successfully updated!');
+		}
+		$query = $this->db->query('SELECT * FROM "Student" WHERE roll_no = ?', array($this->session->userdata('rollno')));
+		$row = $query->row();
 		$data['fields'] = array(
 			array(
-				'name' => 'Name',
+				'label' => 'Name',
+				'name' => 'name',
 				'type' => 'text',
-				'default' => '',
+				'default' => $row->name,
 				),
 			array(
-				'name' => 'Roll Number',
-				'type' => 'text',
-				'default' => '',
-				),
-			array(
-				'name' => 'Hall No',
+				'label' => 'Hall No',
+				'name' => 'hall_no',
 				'type' => 'select',
-				'default' => '',
+				'default' => $row->hall_no,
 				'options' => array('1','2','3','4','5','GH2','7','8','9','10','GH1')
 				),
 			array(
-				'name' => 'Room No',
+				'label' => 'Room No',
+				'name' => 'room_no',
 				'type' => 'text',
-				'default' => '',
+				'default' => $row->room_no,
 				),
 			array(
-				'name' => 'Gender',
+				'label' => 'Gender',
+				'name' => 'gender',
 				'type' => 'select',
-				'default' => '',
+				'default' => $row->gender,
 				'options' => array('Male', 'Female')
 				),
 			array(
-				'name' => 'Program',
+				'label' => 'Program',
+				'name' => 'program',
 				'type' => 'select',
-				'default' => '',
+				'default' => $row->program,
 				'options' => array('B.Tech','M.Tech','MBA','M.Des','M.Sc','PhD')
 				),
 			array(
-				'name' => 'Department',
+				'label' => 'Department',
+				'name' => 'department',
 				'type' => 'select',
-				'default' => '',
+				'default' => $row->department,
 				'options' => array('Computer Science and Engineering','Electrical Engineering','Mechanical Engineering','Civil Engineering','Aerospace Engineering','Biological Sciences and Bio-Engineering','Chemical Engineering','Environmental Engineering','Industrial and Management Engineering','Materials and Metallurgical Engineering','Material Science and Engineering','Humanities and Social Sciences','Chemistry','Physics','Statistics','Mathematics and Statistics')
 				),
 			);
-		$this->load->view('include/header');
+		$this->load->view('include/header', $header);
 		$this->load->view('templates/form', $data);
 		$this->load->view('include/footer');
 	}

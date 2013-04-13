@@ -3,7 +3,9 @@ class Frontpage extends MY_Controller {
 
    	public function index()
 	{
-	  $this->load->view('templates/login');
+		if($this->session->userdata('email'))
+			redirect('/user');
+	  	$this->load->view('templates/login');
 	}
 }
 

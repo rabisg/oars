@@ -5,6 +5,57 @@
  * CodeIgniter includes.
 */
 
+function modalLinks($url, $text) {
+   return anchor($url, $text, 'data-toggle="modal" data-target="#courseModal"');
+}
+
+function status($course_offering, $rollno, $status)
+{
+   $form = '<form method="POST" class="form-inline" action="'. site_url('instructor/manage/' . $course_offering) . '">';
+   $form .= '<input type="hidden" name="rollno" value="' . $rollno . '">';
+   $form .= '<select class="input-medium" name="status">';
+   $form .= '<option value="Accepted" ';
+   if(strcmp($status, 'Accepted')==0) $form .= 'selected=selected ';
+   $form .= '>Accept</option>';
+   $form .= '<option value="Rejected" ';
+   if(strcmp($status, 'Rejected')==0) $form .= 'selected=selected ';
+   $form .= '>Reject</option>';
+   $form .= '<option value="Meet Instructor" ';
+   if(strcmp($status, 'Meet Instructor')==0) $form .= 'selected=selected ';
+   $form .= '>Meet Instructor</option>';
+   $form .= '</select>';
+   $form .= '&nbsp;<button type="submit" class="btn">Submit</button>';
+   $form .= '</form>';
+   return $form;
+}
+function grade($course_offering, $rollno, $grade)
+{
+   $form = '<form method="POST" class="form-inline" action="'. site_url('instructor/grade/' . $course_offering) . '">';
+   $form .= '<input type="hidden" name="rollno" value="' . $rollno . '">';
+   $form .= '<select class="input-small" name="grade">';
+   
+   $form .= '<option></option>';
+   $form .= '<option value="A" ';
+   if(strcmp($grade, 'A')==0) $form .= 'selected=selected ';
+   $form .= '>A</option>';
+   $form .= '<option value="B" ';
+   if(strcmp($grade, 'B')==0) $form .= 'selected=selected ';
+   $form .= '>B</option>';
+   $form .= '<option value="C" ';
+   if(strcmp($grade, 'C')==0) $form .= 'selected=selected ';
+   $form .= '>C</option>';
+   $form .= '<option value="D" ';
+   if(strcmp($grade, 'D')==0) $form .= 'selected=selected ';
+   $form .= '>D</option>';
+   $form .= '<option value="F" ';
+   if(strcmp($grade, 'F')==0) $form .= 'selected=selected ';
+   $form .= '>F</option>';
+   
+   $form .= '</select>';
+   $form .= '&nbsp;<button type="submit" class="btn">Submit</button>';
+   $form .= '</form>';
+   return $form;
+}
 /**
  * base_url
  *

@@ -7,7 +7,7 @@
 	<meta name="keywords" content="">
 	<meta name="author" content="">
 
-	<title>CodeIgniter Bootstrap</title>
+	<title>OARS: IIT Kanpur</title>
 
 	<link href="<?php echo base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/css/bootstrap-responsive.min.css') ?>" rel="stylesheet">
@@ -73,7 +73,9 @@
 	code {
 		font-size: 80%;
 	}
-
+	.subheading {
+		color: #e5e5e5;
+	}
 	</style>
 
 </head>
@@ -92,9 +94,11 @@
 					<div class="pull-right nav-collapse nav">
 						<ul class="nav">
 							<li>
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome <?php echo $this->session->userdata('username');?> <b class="caret"></b></a>
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome <?php echo $this->session->userdata('email');?> <b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><?php echo anchor('/user/', 'Profile');?></li>
+									<? if(strstr($this->session->userdata('role'), 'student')): ?>
+										<li><?php echo anchor('/user/profile', 'Profile');?></li>
+									<? endif; ?>
 									<li><?php echo anchor('/user/logout', 'Logout');?></li>
 								</ul>
 							</li>
@@ -113,27 +117,33 @@
 						<li class="nav-header">Administration</li>
 						<li><?php echo anchor('/admin/addcourse', 'Add Course');?></li>
 						<li><?php echo anchor('/admin/addoffering', 'Add Course Offering');?></li>
-						<li><a href="#">View all courses</a></li>
+						<li><? echo anchor('/course/all','View all Courses') ?></li>
 					<? endif; ?>
 					<? if(strstr($this->session->userdata('role'), 'prof')): ?>
 						<li class="nav-header">Course Administration</li>
-						<li><a href="#">My Courses</a></li>
-						<li><a href="#">Courses Being Offered</a></li>
+						<li><? echo anchor('/instructor','Pre-Registration Courses') ?></li>						
+						<li><? echo anchor('/instructor/current','Current Courses') ?></li>
+						<li><? echo anchor('/course/offered','Courses Being Offered') ?></li>
 					<? endif; ?>
 					<? if(strstr($this->session->userdata('role'), 'student')): ?>
 						<li class="nav-header">Pre-Registration</li>
-						<li><a href="#">Courses Being Offered</a></li>
-						<li><a href="#">Request Course</a></li>
-						<li><a href="#">Submit Course Request</a></li>
-						<li><a href="#">Time Table</a></li>
+						<li><? echo anchor('/course/offered','Courses Being Offered') ?></li>
+						<li><? echo anchor('/prereg','Request Course') ?></li>
+						<li><? echo anchor('/prereg/submit','Submit Course Request') ?></li>
+						<li><? echo anchor('/prereg/timetable','Time Table') ?></li>
 						<li class="nav-header">Current Registration</li>
-						<li><a href="#">Registration</li>
-						<li><a href="#">Time Table</a></li>
-						<li><a href="#">Submit Course Request</a></li>
+						<li><? echo anchor('/student/registration','Registration') ?></li>
+						<li><? echo anchor('/student/timetable','Time Table') ?></li>
 						<li class="nav-header">Academic Information</li>
-						<li><a href="#">Transcripts</li>
-						<li><a href="#">Backlogs</a></li>	
+						<li><? echo anchor('/student/transcript','Transcript') ?></li>
+						<li><? echo anchor('/student/backlog','Backlogs') ?></li>	
 					<? endif; ?>
 				</ul>
 			</div>
 			<div class="span8">
+				<? if(isset($alert)): ?>
+				<div class="alert alert-<?= $alert['type'] ?>">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+  					<?= $alert['text'] ?>
+				</div>
+				<? endif; ?>

@@ -13,22 +13,24 @@
  */
 ?>
 
-<form class="form-horizontal" method="POST">
+<form class="form-horizontal" method="POST" action="">
    <? foreach ($fields as $field): ?>
       <div class="control-group">
-      	<label class="control-label"><?= $field['name'] ?></label>
+      	<label class="control-label"><?= $field['label'] ?></label>
          <div class="controls">
             <? if (strcmp($field['type'], 'select')!=0): ?>
    				<input 
                   class="input-xlarge" 
                   type="<?= $field['type'] ?>" 
                   name="<?= $field['name'] ?>" 
-                  value="<? if (!empty($value)) echo $value; ?>" 
+                  value="<? if (isset($field['default'])) echo $field['default']; ?>" 
                />
             <? else: ?>
-               <select name="<?= $field['name'] ?>" >
+               <select name="<?= $field['name'] ?>" value="<?= $field['default']; ?>">
                   <? foreach ($field['options'] as $option): ?>
-                     <option value="<?= $option ?>"><?= $option ?></option>
+                     <option value="<?= $option ?>" <? if(strcmp($option, $field['default'])==0) echo "selected=selected" ?> >
+                        <?= $option ?>
+                     </option>
                   <? endforeach; ?>
                </select>
             <? endif; ?>

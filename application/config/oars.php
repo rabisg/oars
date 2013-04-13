@@ -10,5 +10,5 @@
 
 $config['PR_year'] = '2013-14';
 $config['PR_sem'] = 'I';
-$config['C_year'] = '2012-13';
-$config['C_sem'] = 'III';
+$config['C_year'] = '2013-14';//'2012-13';
+$config['C_sem'] = 'I';//'III';
