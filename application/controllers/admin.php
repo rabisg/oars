@@ -11,12 +11,24 @@ class Admin extends Authenticated {
 	public function addCourse()
 	{
 		$header = array();
+		$id = null;
+		$prereq = isset($_POST['prereq']) ? $_POST['prereq'] : array();
 		if (isset($_POST['title'])) {
-			if($this->db->insert('Course', $_POST))
+			if (isset($_POST['prereq'])) unset($_POST['prereq']);
+			if (!isset($_POST['syllabus'])) $_POST['syllabus'] = " ";
+			if($this->db->insert('Course', $_POST)) {
 				$header['alert'] = array('type' => 'success', 'text' => $this->input->post('course_no') . ' has been succesfully created');
+				$id = $this->input->post('course_no');
+			}
 			else
 				$header['alert'] = array('type' => 'error', 'text' => $this->db->_error_message());
 		}
+		if(count($prereq)>0 && $id)
+			foreach ($prereq as $p) {
+				$arr['course_no'] = $id;
+				$arr['req_course_no'] = $p;
+				$this->db->insert('PreRequisite', $arr);
+			}
 		$this->load->view('include/header', $header);
 		$this->load->view('admin/addcourse');
 		$this->load->view('include/footer');
