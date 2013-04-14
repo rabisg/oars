@@ -40,6 +40,7 @@
             </tr>
           </tbody>
         </table>
+      </div>
     </fieldset>
 
     <fieldset>

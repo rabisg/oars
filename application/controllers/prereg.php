@@ -8,7 +8,7 @@ class Prereg extends Authenticated {
 			$query = $this->db->query('SELECT course_offering FROM "CourseOffering" WHERE course_no = ?', array($c[0]));
 			$course_offering = $query->row()->course_offering;
 			$data = array(
-				'course_offering' => $_POST['course_offering'],
+				'course_offering' => $course_offering,
 				'regn_type' => $_POST['regn_type'],
 				'course_type' => $_POST['course_type'],
 				'roll_no' => $this->session->userdata('rollno'),
@@ -42,6 +42,22 @@ class Prereg extends Authenticated {
 
 	public function submit()
 	{
+		if(isset($_POST['course_offering'])) {
+			$c = explode(': ', $_POST['course_offering']);
+			$course_offering = $c[0];
+			$query = $this->db->query('SELECT * FROM "CourseRequest" WHERE course_offering = ? AND roll_no = ? AND status= ?', array($course_offering, $this->session->userdata('rollno'), 'Accepted'));
+			if($query->num_rows()>0) {
+				$row = $query->row();
+				$data = array(
+					'course_offering' => $row->course_offering,
+					'regn_type' => $row->regn_type,
+					'course_type' => $row->course_type,
+					'roll_no' => $this->session->userdata('rollno'),
+					);
+				$this->db->insert('Registration', $data);
+			}
+		}
+
 		$table = array(
 			'head' => array('Course Type', 'Course Number', 'Course Name', 'Credits'),
 			'rows' => array()
@@ -59,19 +75,6 @@ class Prereg extends Authenticated {
 			}
 		}
 
-		if(isset($_POST['course_offering'])) {
-			$query = $this->db->query('SELECT * FROM "CourseRequest" WHERE course_offering = ? AND roll_no = ? AND status= ?', array($_POST['course_offering'], $this->session->userdata('rollno'), 'Accepted'));
-			if($query->num_rows()>0) {
-				$row = $query->row();
-				$data = array(
-					'course_offering' => $row->course_offering,
-					'regn_type' => $row->regn_type,
-					'course_type' => $row->course_type,
-					'roll_no' => $this->session->userdata('rollno'),
-					);
-				$this->db->insert('Registration', $data);
-			}
-		}
 		$req = array('options' => $options);
 		//List of accepted courses
 		$this->load->view('include/header');
@@ -81,7 +84,16 @@ class Prereg extends Authenticated {
 	}
 	public function timetable()
 	{
+		$data = array(
+			'head' => array('Course Number', 'Day', 'Start Time', 'Duration', 'Location'),
+			'rows' => array(),
+			'title' => 'Timetable for pre-registration'
+			);
+		$query = $this->db->query('SELECT course_no, day, start_time, duration, location FROM "CourseOffering" NATURAL JOIN "Registration" NATURAL JOIN "TimeTable" NATURAL JOIN "Course" WHERE roll_no = ? AND acad_year = ? AND semester = ? ORDER BY  day', array($this->session->userdata('rollno'), $this->config->item('PR_year'), $this->config->item('PR_sem')));
+		if($query->num_rows()>0)
+			$data['rows'] = $query->result();
 		$this->load->view('include/header');
+		$this->load->view('templates/table', $data);
 		$this->load->view('include/footer');
 	}
 }

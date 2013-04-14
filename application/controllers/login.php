@@ -3,7 +3,15 @@ class Login extends MY_Controller {
 
 	public function index()
 	{
-		//Check whether user exists and assign him role
+		/*$this->load->library('ftp');
+		$config['hostname'] = 'webhome.cc.iitk.ac.in';
+		$config['username'] = $this->input->post('email');
+		$config['password'] = $this->input->post('password');
+		$config['debug']	= FALSE;
+
+		if(!$this->ftp->connect($config))
+			redirect('index.php');*/
+		
 		$role = '';
 		$sql = 'SELECT * FROM "Student" WHERE email = ?'; 
 		$query = $this->db->query($sql, array($this->input->post('email')));

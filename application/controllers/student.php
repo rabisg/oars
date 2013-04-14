@@ -28,6 +28,8 @@ class Student extends Authenticated {
 			'rows' => array(),
 			'title' => 'Registration details for ' . $this->config->item('C_year') . ' ' . $this->config->item('C_sem'),
 			);
+		$query = $this->db->query('SELECT course_no, title, course_type, units FROM "Registration" NATURAL JOIN "CourseOffering" NATURAL JOIN "Course" WHERE roll_no = ? AND acad_year = ? AND semester = ?', array($this->session->userdata('rollno'), $this->config->item('C_year'), $this->config->item('C_sem')));
+		$data['rows'] = $query->result();
 		$this->load->view('include/header');
 		$this->load->view('templates/table', $data);
 		$this->load->view('include/footer');
@@ -39,7 +41,7 @@ class Student extends Authenticated {
 			'rows' => array(),
 			'title' => 'Unofficial transcript for ' . $this->session->userdata('rollno')
 			);
-		$query = $this->db->query('SELECT course_no, title, course_type, units, grade FROM "Registration" NATURAL JOIN "CourseOffering" NATURAL JOIN "Course" WHERE roll_no = ? ORDER BY acad_year, semester', array($this->session->userdata('rollno')));
+		$query = $this->db->query('SELECT course_no, title, course_type, units, grade FROM "Registration" NATURAL JOIN "CourseOffering" NATURAL JOIN "Course" WHERE roll_no = ? AND grade NOTNULL ORDER BY acad_year, semester', array($this->session->userdata('rollno')));
 		$data['rows'] = $query->result();
 		$this->load->view('include/header');
 		$this->load->view('templates/table', $data);
@@ -47,7 +49,16 @@ class Student extends Authenticated {
 	}
 	public function timetable()
 	{
+		$data = array(
+			'head' => array('Course Number', 'Day', 'Start Time', 'Duration', 'Location'),
+			'rows' => array(),
+			'title' => 'Timetable for current semester'
+			);
+		$query = $this->db->query('SELECT course_no, day, start_time, duration, location FROM "CourseOffering" NATURAL JOIN "Registration" NATURAL JOIN "TimeTable" NATURAL JOIN "Course" WHERE roll_no = ? AND acad_year = ? AND semester = ? ORDER BY  day', array($this->session->userdata('rollno'), $this->config->item('C_year'), $this->config->item('C_sem')));
+		if($query->num_rows()>0)
+			$data['rows'] = $query->result();
 		$this->load->view('include/header');
+		$this->load->view('templates/table', $data);
 		$this->load->view('include/footer');
 	}
 }
