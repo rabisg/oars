@@ -49,8 +49,8 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'postgres';
-$db['default']['password'] = 'postgres';
+$db['default']['username'] = '';
+$db['default']['password'] = '';
 $db['default']['database'] = 'OARS';
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['dbprefix'] = '';
